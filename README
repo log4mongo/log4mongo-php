@@ -31,6 +31,11 @@ Author
 ======
 char0n (Vladimir Gorej) <gorej@mortality.sk>
 
+Credits
+=======
+Special credits to Jozef Sevcik who enspired
+the creation and design of this appender
+
 References
 ==========
 [1] http://www.mongodb.org/
