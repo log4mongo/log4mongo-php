@@ -6,6 +6,7 @@ log4php-MongoDB is using mongodb-php driver - http://www.php.net/manual/en/book.
 Requirements
 ============
 - 5.x > required
+- php MongoDB driver
 - tested against MongoDB 1.2.4
 
 Configuration
@@ -16,7 +17,7 @@ Example appender XML configuration::
   <!-- MongoDB connection options -->
   <host value="localhost" />
   <port value="27017" />
-  <databaseName value="log4net_mongodb" />
+  <databaseName value="log4php_mongodb" />
   <collectionName value="logs" />
   <!--
   Uncomment following for MongoDB authentication
@@ -35,3 +36,5 @@ References
 [1] http://www.mongodb.org/
 [2] http://incubator.apache.org/log4php/
 [3] http://www.php.net/manual/en/book.mongo.php
+[4] http://github.com/mongodb/mongo-php-driver/downloads
+[5] http://downloads.php.net/pierre/ (search mongo)
