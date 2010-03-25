@@ -190,7 +190,7 @@ class LoggerLoggingEvent {
 					$locationInfo['function'] = 'main';
 				}
 			}
-					 
+			
 			$this->locationInfo = new LoggerLocationInfo($locationInfo, $this->fqcn);
 		}
 		return $this->locationInfo;

@@ -35,21 +35,29 @@
 
 class LoggerAppenderMongoDB extends LoggerAppender {
     
-    protected static DEFAULT_MONGO_HOST      = 'localhost';
-    protected static DEFAULT_MONGO_PORT      = 27017;
-    protected static DEFAULT_DB_NAME         = 'log4php_mongodb';
-    protected static DEFAULT_COLLECTION_NAME = 'logs';    
+    protected static $DEFAULT_MONGO_HOST      = 'localhost';
+    protected static $DEFAULT_MONGO_PORT      = 27017;
+    protected static $DEFAULT_DB_NAME         = 'log4php_mongodb';
+    protected static $DEFAULT_COLLECTION_NAME = 'logs';    
     
-    protected $hostname       = self::$DEFAULT_MONGO_HOST;
-    protected $port           = self::$DEFAULT_MONGO_PORT;
-    protected $dbName         = self::$DEFAULT_DB_NAME;
-    protected $collectionName = self::$DEFAULT_COLLECTION_NAME;
+    protected $hostname;
+    protected $port;
+    protected $dbName;
+    protected $collectionName;
     
     protected $connection;
     protected $collection;
     
+    protected $userName;
+    protected $password;
+    
     public function __construct($name = '') {
         parent::__construct($name);
+        $this->hostname       = self::$DEFAULT_MONGO_HOST;
+        $this->port           = self::$DEFAULT_MONGO_PORT;
+        $this->dbName         = self::$DEFAULT_DB_NAME;
+        $this->collectionName = self::$DEFAULT_COLLECTION_NAME;
+        
         $this->requiresLayout = false;
     }
     
@@ -57,7 +65,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
         $this->hostname = $hostname;
     }
     
-    public function getHostname() {
+    public function getHost() {
         return $htis->hostname;
     }
     
@@ -85,6 +93,22 @@ class LoggerAppenderMongoDB extends LoggerAppender {
         return $this->collectionName;
     }
     
+    public function setUserName($userName) {
+        $this->userName = $userName;
+    }
+    
+    public function getUserName() {
+        return $this->userName;
+    }
+    
+    public function setPassword($password) {
+        $this->password = $password;
+    }
+    
+    public function getPassword() {
+        return $this->password;
+    }
+    
     /**
      * Setup db connection.
      * Based on defined options, this method connects to db defined in {@link $dbNmae}
@@ -96,6 +120,9 @@ class LoggerAppenderMongoDB extends LoggerAppender {
         try {
             $this->connection = new Mongo(sprintf('%s:%d', $this->hostname, $this->port));
             $db               = $this->connection->selectDB($this->dbName);
+            if ($this->userName !== null && $this->password !== null) {
+                $db->authenticate($this->userName, $this->password);
+            }
             $this->collection = $db->selectCollection($this->collectionName);                        
         } catch (MongoException $ex) {
             $this->canAppend = false;
@@ -137,7 +164,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
     /**
      * @todo implement throwable info conversion, if implemented into log4php
      */
-    protected loggingEventToBSON(LoggerLoggingEvent $event) {
+    protected function loggingEventToBSON(LoggerLoggingEvent $event) {
         $document = array(
             'timestamp' => $event->getTimestamp(),
             'level'     => $event->getLevel()->toString(),
