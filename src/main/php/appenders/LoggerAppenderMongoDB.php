@@ -140,7 +140,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
      */
     public function append(LoggerLoggingEvent $event) {    
         if ($this->collection != null) {
-            $document = $this->LoggingEventToBSON($event);
+            $document = $this->loggingEventToArray($event);
             $this->collection->insert($document);
         }        
     }
@@ -164,7 +164,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
     /**
      * @todo implement throwable info conversion, if implemented into log4php
      */
-    protected function loggingEventToBSON(LoggerLoggingEvent $event) {
+    protected function loggingEventToArray(LoggerLoggingEvent $event) {
         $document = array(
             'timestamp' => $event->getTimestamp(),
             'level'     => $event->getLevel()->toString(),
