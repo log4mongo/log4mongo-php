@@ -35,10 +35,10 @@
 
 class LoggerAppenderMongoDB extends LoggerAppender {
 		
-	protected static $DEFAULT_MONGO_HOST		= 'localhost';
-	protected static $DEFAULT_MONGO_PORT		= 27017;
-	protected static $DEFAULT_DB_NAME			= 'log4php_mongodb';
-	protected static $DEFAULT_COLLECTION_NAME	= 'logs';		 
+	protected static $DEFAULT_MONGO_HOST       = 'localhost';
+	protected static $DEFAULT_MONGO_PORT       = 27017;
+	protected static $DEFAULT_DB_NAME          = 'log4php_mongodb';
+	protected static $DEFAULT_COLLECTION_NAME  = 'logs';		 
 	
 	protected $hostname;
 	protected $port;
@@ -53,10 +53,10 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		
 	public function __construct($name = '') {
 		parent::__construct($name);
-		$this->hostname			= self::$DEFAULT_MONGO_HOST;
-		$this->port				= self::$DEFAULT_MONGO_PORT;
-		$this->dbName			= self::$DEFAULT_DB_NAME;
-		$this->collectionName	= self::$DEFAULT_COLLECTION_NAME;
+		$this->hostname         = self::$DEFAULT_MONGO_HOST;
+		$this->port             = self::$DEFAULT_MONGO_PORT;
+		$this->dbName           = self::$DEFAULT_DB_NAME;
+		$this->collectionName   = self::$DEFAULT_COLLECTION_NAME;
 		
 		$this->requiresLayout = false;
 	}
@@ -172,16 +172,16 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	protected function loggingEventToArray(LoggerLoggingEvent $event) {
 		$document = array(
 				'timestamp' => $event->getTimestamp(),
-				'level'		=> $event->getLevel()->toString(),
-				'thread'	=> $event->getThreadName(),
-				'message'	=> $event->getMessage()
+				'level'     => $event->getLevel()->toString(),
+				'thread'    => $event->getThreadName(),
+				'message'   => $event->getMessage()
 		);
 		
 		if ($event->getLocationInformation() !== null) {
-				$document['fileName']	= $event->getLocationInformation()->getFileName();
-				$document['method']		= $event->getLocationInformation()->getMethodName();
-				$document['lineNumber']	= $event->getLocationInformation()->getLineNumber();
-				$document['className']	= $event->getLocationInformation()->getClassName();
+				$document['fileName']   = $event->getLocationInformation()->getFileName();
+				$document['method']     = $event->getLocationInformation()->getMethodName();
+				$document['lineNumber'] = $event->getLocationInformation()->getLineNumber();
+				$document['className']  = $event->getLocationInformation()->getClassName();
 		}
 		
 		return $document;
