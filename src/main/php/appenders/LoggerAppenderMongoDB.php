@@ -61,12 +61,12 @@ class LoggerAppenderMongoDB extends LoggerAppender {
         $this->requiresLayout = false;
     }
     
-    public function setHostname($hostname) {
-        $this->hostname = $hostname;
+    public function setHost($hostname) {    	
+        $this->hostname = $hostname;        
     }
     
     public function getHost() {
-        return $htis->hostname;
+        return $this->hostname;
     }
     
     public function setPort($port) {
@@ -121,13 +121,16 @@ class LoggerAppenderMongoDB extends LoggerAppender {
             $this->connection = new Mongo(sprintf('%s:%d', $this->hostname, $this->port));
             $db               = $this->connection->selectDB($this->dbName);
             if ($this->userName !== null && $this->password !== null) {
-                $db->authenticate($this->userName, $this->password);
+                $authResult = $db->authenticate($this->userName, $this->password);
+                if ($authResult['ok'] == floatval(0)) {
+					throw new Exception($authResult['errmsg'], $authResult['ok']);
+                }
             }
             $this->collection = $db->selectCollection($this->collectionName);                        
-        } catch (MongoException $ex) {
+        } catch (Exception $ex) {
             $this->canAppend = false;
             throw new LoggerException($ex);
-        }
+        } 
         
         $this->canAppend = true;
         return true;
@@ -151,8 +154,10 @@ class LoggerAppenderMongoDB extends LoggerAppender {
     public function close() {
     	if($this->closed != true) {
     	    $this->collection = null;
-    	    $this->connection->close();
-    	    $this->connection = null;
+    	    if ($this->connection !== null) {
+    	    	$this->connection->close();
+				$this->connection = null;	
+    	    }    	    
         	$this->closed = true;
     	}
     }    
