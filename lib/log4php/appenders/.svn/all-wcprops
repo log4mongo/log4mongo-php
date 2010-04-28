@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/asf/!svn/ver/936612/logging/log4php/trunk/src/main/php/appenders
+END
+LoggerAppenderNull.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderNull.php
+END
+LoggerAppenderEcho.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/936612/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderEcho.php
+END
+LoggerAppenderFile.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderFile.php
+END
+LoggerAppenderSyslog.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderSyslog.php
+END
+LoggerAppenderConsole.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderConsole.php
+END
+LoggerAppenderDailyFile.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderDailyFile.php
+END
+LoggerAppenderMail.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderMail.php
+END
+LoggerAppenderPDO.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderPDO.php
+END
+LoggerAppenderMailEvent.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderMailEvent.php
+END
+LoggerAppenderRollingFile.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderRollingFile.php
+END
+LoggerAppenderPhp.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderPhp.php
+END
+LoggerAppenderSocket.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderSocket.php
+END
+LoggerAppenderAdodb.php
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/appenders/LoggerAppenderAdodb.php
+END

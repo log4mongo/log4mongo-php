@@ -21,7 +21,7 @@
 /**
  * The internal representation of logging event.
  *
- * @version $Revision: 832662 $
+ * @version $Revision: 937159 $
  * @package log4php
  */
 class LoggerLoggingEvent {
@@ -109,6 +109,11 @@ class LoggerLoggingEvent {
 	* @var LoggerLocationInfo Location information for the caller. 
 	*/
 	private $locationInfo = null;
+                   
+    /**
+    * @var LoggerThrowableInformation log4php internal representation of throwable
+    */
+	private $throwableInfo = null;
 	
 	/**
 	* Instantiate a LoggingEvent from the supplied parameters.
@@ -121,8 +126,9 @@ class LoggerLoggingEvent {
 	* @param LoggerLevel $priority The level of this event.
 	* @param mixed $message The message of this event.
 	* @param integer $timeStamp the timestamp of this logging event.
+    * @param Exception $throwable The throwable associated with logging event
 	*/
-	public function __construct($fqcn, $logger, $priority, $message, $timeStamp = null) {
+	public function __construct($fqcn, $logger, $priority, $message, $timeStamp = null, $throwable = null) {
 		$this->fqcn = $fqcn;
 		if($logger instanceof Logger) {
 			$this->logger = $logger;
@@ -142,8 +148,20 @@ class LoggerLoggingEvent {
 				$this->timeStamp = floatval(time());
 			}
 		}
+		
+		if ($throwable !== null && $throwable instanceof Exception) {
+			$this->throwableInfo = new LoggerThrowableInformation($throwable);
+		}
 	}
 
+	/**
+	 * Returns the full qualified classname.
+	 * TODO: PHP does contain namespaces in 5.3. Those should be returned too, 
+	 */
+	 public function getFullQualifiedClassname() {
+		 return $this->fqcn;
+	 }
+	 
 	/**
 	 * Set the location information for this logging event. The collected
 	 * information is cached for future use.
@@ -190,7 +208,7 @@ class LoggerLoggingEvent {
 					$locationInfo['function'] = 'main';
 				}
 			}
-			
+					 
 			$this->locationInfo = new LoggerLocationInfo($locationInfo, $this->fqcn);
 		}
 		return $this->locationInfo;
@@ -323,10 +341,10 @@ class LoggerLoggingEvent {
 	}
 
 	/**
-	 * @return mixed null
+	 * @return mixed LoggerThrowableInformation
 	 */
 	public function getThrowableInformation() {
-		return null;
+		return $this->throwableInfo;
 	}
 	
 	/**

@@ -21,7 +21,7 @@
 /**
  * A convenience class to convert property values to specific types.
  *
- * @version $Revision: 822464 $ 
+ * @version $Revision: 895922 $ 
  * @package log4php
  * @subpackage helpers
  * @static
@@ -247,7 +247,7 @@ class LoggerOptionConverter {
 	 * <p>For example, if the "MY_CONSTANT" contains "value", then
 	 * the call
 	 * <code>
-	 * $s = LoggerOptionConverter::substituteVars("Value of key is ${MY_CONSTANT}.");
+	 * $s = LoggerOptionConverter::substVars("Value of key is ${MY_CONSTANT}.");
 	 * </code>
 	 * will set the variable <i>$s</i> to "Value of key is value.".</p>
 	 * 
@@ -264,8 +264,6 @@ class LoggerOptionConverter {
 	 * 
 	 * <p>A warn is thrown if <var>$val</var> contains a start delimeter "${" 
 	 * which is not balanced by a stop delimeter "}" and an empty string is returned.</p>
-	 * 
-	 * @author Avy Sharell
 	 * 
 	 * @param string $val The string on which variable substitution is performed.
 	 * @param array $props
@@ -295,7 +293,7 @@ class LoggerOptionConverter {
 					// LoggerOptionConverter::substVars() has no closing brace. Opening brace
 					return '';
 				} else {
-					$j += self::START_LEN;
+					$j += self::DELIM_START_LEN;
 					$key = substr($val, $j, $k - $j);
 					// first try in System properties
 					$replacement = LoggerOptionConverter::getSystemProperty($key, null);

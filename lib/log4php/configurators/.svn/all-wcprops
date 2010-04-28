@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/configurators
+END
+LoggerConfiguratorPhp.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/configurators/LoggerConfiguratorPhp.php
+END
+LoggerConfiguratorIni.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/configurators/LoggerConfiguratorIni.php
+END
+LoggerConfiguratorXml.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/configurators/LoggerConfiguratorXml.php
+END
+LoggerConfiguratorBasic.php
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/repos/asf/!svn/ver/926024/logging/log4php/trunk/src/main/php/configurators/LoggerConfiguratorBasic.php
+END

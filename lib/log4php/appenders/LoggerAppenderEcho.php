@@ -36,7 +36,7 @@
  *    Tue Sep  8 22:44:55 2009,812 [6783] DEBUG appender_echo - Hello World!
  * </pre>
  *
- * @version $Revision: 883108 $
+ * @version $Revision: 936612 $
  * @package log4php
  * @subpackage appenders
  */
@@ -44,16 +44,19 @@ class LoggerAppenderEcho extends LoggerAppender {
 	/** boolean used internally to mark first append */
 	private $firstAppend = true;
 	
+	/** @var boolean type-safe (bool) (true: -1, 1, true; false: 0, false) */
+	private $htmlLineBreak = true;
+
 	public function __construct($name = '') {
-	    parent::__construct($name);
-	    $this->requiresLayout = true;
-	    $this->firstAppend = true;
+		parent::__construct($name);
+		$this->requiresLayout = true;
+		$this->firstAppend = true;
 	}
 	
 	public function __destruct() {
-       $this->close();
-   	}
-   	
+		$this->close();
+	}
+
 	public function activateOptions() {
 		$this->closed = false;
 	}
@@ -62,9 +65,13 @@ class LoggerAppenderEcho extends LoggerAppender {
 		if($this->closed != true) {
 			if(!$this->firstAppend) {
 				echo $this->layout->getFooter();
+				
+				if($this->htmlLineBreak) {
+					echo '<br />';
+				}
 			}
 		}
-		$this->closed = true;	 
+		$this->closed = true;
 	}
 
 	public function append(LoggerLoggingEvent $event) {
@@ -74,7 +81,19 @@ class LoggerAppenderEcho extends LoggerAppender {
 				$this->firstAppend = false;
 			}
 			echo $this->layout->format($event);
+			
+			if($this->htmlLineBreak) {
+					echo '<br />';
+			}
 		} 
+	}
+	
+	public function setHtmlLineBreak($value) {
+		$this->htmlLineBreak = LoggerOptionConverter::toBoolean($value, true);
+	}
+
+	public function getHtmlLineBreak() {
+		return $this->htmlLineBreak;
 	}
 }
 

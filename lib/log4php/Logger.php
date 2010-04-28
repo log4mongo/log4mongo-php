@@ -40,7 +40,7 @@ spl_autoload_register(array('Logger', 'autoload'));
  * @category   log4php
  * @package log4php
  * @license	   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
- * @version	   SVN: $Id: Logger.php 824193 2009-10-11 22:51:24Z chammers $
+ * @version	   SVN: $Id: Logger.php 937159 2010-04-23 05:20:19Z grobmeier $
  * @link	   http://logging.apache.org/log4php
  */
  /*
@@ -108,7 +108,9 @@ class Logger {
 		'LoggerRendererDefault' => '/renderers/LoggerRendererDefault.php',
 		'LoggerRendererObject' => '/renderers/LoggerRendererObject.php',
 		'LoggerRendererMap' => '/renderers/LoggerRendererMap.php',
+		'LoggerRendererException' => '/renderers/LoggerRendererException.php',
 		'LoggerLocationInfo' => '/LoggerLocationInfo.php',
+		'LoggerThrowableInformation' => '/LoggerThrowableInformation.php',
 		'LoggerLoggingEvent' => '/LoggerLoggingEvent.php',
 		'LoggerFilter' => '/LoggerFilter.php',
 		'LoggerFilterDenyAll' => '/filters/LoggerFilterDenyAll.php',
@@ -207,6 +209,16 @@ class Logger {
 	
 	/* Logging methods */
 	/**
+	 * Log a message object with the TRACE level including the caller.
+	 *
+	 * @param mixed $message message
+	 * @param mixed $caller caller object or caller string id
+	 */
+	public function trace($message, $caller = null) {
+		$this->logLevel($message, LoggerLevel::getLevelTrace(), $caller);
+	} 		
+	
+	/**
 	 * Log a message object with the DEBUG level including the caller.
 	 *
 	 * @param mixed $message message
@@ -270,7 +282,12 @@ class Logger {
 	 * @see LoggerLoggingEvent			
 	 */
 	public function forcedLog($fqcn, $caller, $level, $message) {
-		$this->callAppenders(new LoggerLoggingEvent($fqcn, $this, $level, $message));
+		$throwable = null;
+		if ($caller !== null && $caller instanceof Exception) {
+			$throwable = $caller;							 
+		}
+		
+		$this->callAppenders(new LoggerLoggingEvent($fqcn, $this, $level, $message, null, $throwable));
 	} 
 	
 	
