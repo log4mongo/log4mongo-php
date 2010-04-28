@@ -166,9 +166,6 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		$this->close();
 	}
 		
-	/**
-	 * @todo implement throwable info conversion, if implemented into log4php
-	 */
 	protected function loggingEventToArray(LoggerLoggingEvent $event) {
 		$document = array(
 				'timestamp' => $event->getTimestamp(),
@@ -183,8 +180,26 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 				$document['lineNumber'] = $event->getLocationInformation()->getLineNumber();
 				$document['className']  = $event->getLocationInformation()->getClassName();
 		}
+        
+        if ($event->getThrowableInformation() !== null) {
+            $document['exception'] = $this->exceptionToArray($event->getThrowableInformation()->getThrowable());                    
+        }
 		
 		return $document;
 	}
+    
+    protected function exceptionToArray(Exception $ex) {
+        $document = array(        
+            'message'    => $ex->getMessage(),
+            'code'       => $ex->getCode(),
+            'stackTrace' => $ex->getTraceAsString(),
+        );
+        
+        if (method_exists($ex, 'getPrevious') && $ex->getPrevious() !== null) {
+            $document['innerException'] = $this->exceptionToArray($ex->getPrevious());
+        }
+        
+        return $document;
+    }
 }
 ?>
