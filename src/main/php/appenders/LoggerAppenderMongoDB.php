@@ -30,8 +30,31 @@
  * @author char0n (Vladimir Gorej) <gorej@mortality.sk>	 
  * @package log4php
  * @subpackage appenders
- * @version 0.9a
+ * @version 1.1
 */
+
+
+// Format of log event (for exception):
+// {
+//    "timestamp": {"sec":1272485280,"usec":604269},
+//    "level":"ERROR",
+//    "thread":"2556",
+//    "message":"testmessage",
+//    "fileName":"NA",
+//    "method":"getLocationInformation",
+//    "lineNumber":"NA",
+//    "className":"LoggerLoggingEvent",
+//    "exception":{
+//        "message":"exception2",
+//        "code":0,
+//        "stackTrace":"stackTrace of Exception",
+//        "innerException":{
+//            "message":"exception1",
+//            "code":0,
+//            "stackTrace":"stactTrace of inner Exception"
+//        }
+//    }
+// } 
 
 class LoggerAppenderMongoDB extends LoggerAppender {
 		
@@ -56,9 +79,8 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		$this->hostname         = self::$DEFAULT_MONGO_HOST;
 		$this->port             = self::$DEFAULT_MONGO_PORT;
 		$this->dbName           = self::$DEFAULT_DB_NAME;
-		$this->collectionName   = self::$DEFAULT_COLLECTION_NAME;
-		
-		$this->requiresLayout = false;
+		$this->collectionName   = self::$DEFAULT_COLLECTION_NAME;		
+		$this->requiresLayout   = false;
 	}
 		
 	public function setHost($hostname) {			
@@ -149,8 +171,8 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	}
 		
 	/**
-		 * Closes the connection to the logging database
-		 */
+	 * Closes the connection to the logging database
+	 */
 	public function close() {
 		if($this->closed != true) {
 			$this->collection = null;
@@ -167,37 +189,37 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	}
 		
 	protected function loggingEventToArray(LoggerLoggingEvent $event) {
-		$timestampSec	 = round($event->getTimestamp());
-		$timestampUsec = $event->getTimestamp() - $timestampSec;
+		$timestampSec  = (int) $event->getTimestamp();
+		$timestampUsec = (int) (($event->getTimestamp() - $timestampSec) * 1000000);
         
 		$document = array(
-				'timestamp' => new MongoDate($timestampSec, $timestampUsec),
-				'level'     => $event->getLevel()->toString(),
-				'thread'    => $event->getThreadName(),
-				'message'   => $event->getMessage()
+			'timestamp' => new MongoDate($timestampSec, $timestampUsec),
+			'level'     => $event->getLevel()->toString(),
+			'thread'    => $event->getThreadName(),
+			'message'   => $event->getMessage()
 		);
 		
 		if ($event->getLocationInformation() !== null) {
-				$document['fileName']   = $event->getLocationInformation()->getFileName();
-				$document['method']     = $event->getLocationInformation()->getMethodName();
-				$document['lineNumber'] = $event->getLocationInformation()->getLineNumber();
-				$document['className']  = $event->getLocationInformation()->getClassName();
+			$document['fileName']   = $event->getLocationInformation()->getFileName();
+			$document['method']     = $event->getLocationInformation()->getMethodName();
+			$document['lineNumber'] = $event->getLocationInformation()->getLineNumber();
+			$document['className']  = $event->getLocationInformation()->getClassName();
 		}
         
 		if ($event->getThrowableInformation() !== null) {
-				$document['exception'] = $this->exceptionToArray($event->getThrowableInformation()->getThrowable());										
+			$document['exception'] = $this->exceptionToArray($event->getThrowableInformation()->getThrowable());										
 		}
-		
+        
 		return $document;
 	}
     
 	protected function exceptionToArray(Exception $ex) {
 		$document = array(				
-			'message'		 => $ex->getMessage(),
-			'code'			 => $ex->getCode(),
+			'message'    => $ex->getMessage(),
+			'code'       => $ex->getCode(),
 			'stackTrace' => $ex->getTraceAsString(),
 		);
-			
+                        
 		if (method_exists($ex, 'getPrevious') && $ex->getPrevious() !== null) {
 			$document['innerException'] = $this->exceptionToArray($ex->getPrevious());
 		}

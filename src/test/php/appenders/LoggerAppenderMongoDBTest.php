@@ -31,7 +31,14 @@
  * @author char0n (Vladimir Gorej) <gorej@mortality.sk>	 
  * @package log4php
  * @subpackage appenders
- * @version 0.9a
+ * @version 1.1
+*/
+
+/*
+require_once realpath(dirname(__FILE__).'../../../../../lib/log4php/LoggerAppender.php');
+require_once realpath(dirname(__FILE__).'../../../../../lib/log4php/LoggerLoggingEvent.php');
+require_once realpath(dirname(__FILE__).'../../../../../lib/log4php/Logger.php');
+require_once realpath(dirname(__FILE__).'../../../../main/php/appenders/LoggerAppenderMongoDB.php');
 */
 
 class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
@@ -161,24 +168,69 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 		}		
 	}		
 	
-	public function testAppend() {
+    public function testAppend1() {
 		self::$appender->append(self::$event);
-	}		 
-	
-	public function testMongoDB() {		
-		$mongo  = new Mongo(sprintf('%s:%d', 'localhost', 27017));
+	}
+    
+	public function testMongoDB1() {		
+		$mongo  = self::$mongoConnection;
 		$db     = $mongo->selectDB('log4php_mongodb');
 		$db->dropCollection('logs');		
 		$collection = $db->selectCollection('logs');
 				
-		self::$appender->activateOptions();
 		self::$appender->append(self::$event);		
 	
 		$this->assertNotEquals($collection->findOne(), null, 'Collection should return one record');
-	}		 
-	
+	}     
+        
+	public function testMongoDBException() {				
+		$mongo	= self::$mongoConnection;
+		$db			= $mongo->selectDB('log4php_mongodb');
+		$db->dropCollection('logs');				
+		$collection = $db->selectCollection('logs');
+			
+		$throwable = new TestingException('exception1');
+								
+		self::$appender->append(new LoggerLoggingEvent("LoggerAppenderMongoDBTest", new Logger("TEST"), LoggerLevel::getLevelError(), "testmessage", microtime(true), $throwable));				 
+		
+		$this->assertNotEquals(null, $collection->findOne(), 'Collection should return one record');
+	}		
+		
+	public function testMongoDBInnerException() {		
+		$mongo	= self::$mongoConnection;
+		$db			= $mongo->selectDB('log4php_mongodb');
+		$db->dropCollection('logs');				
+		$collection = $db->selectCollection('logs');
+				
+		$throwable1 = new TestingException('exception1');
+		$throwable2 = new TestingException('exception2', 0, $throwable1);
+								
+		self::$appender->append(new LoggerLoggingEvent("LoggerAppenderMongoDBTest", new Logger("TEST"), LoggerLevel::getLevelError(), "testmessage", microtime(true), $throwable2));				
+		
+		$this->assertNotEquals(null, $collection->findOne(), 'Collection should return one record');
+	}
+    
 	public function testClose() {
 		self::$appender->close();
+	}
+}
+
+if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+	class TestingException extends Exception {}
+} else {
+	class TestingException extends Exception {
+				
+		protected $cause;
+				
+		public function __construct($message = '', $code = 0, Exception $ex = null) {
+			
+			parent::__construct($message, $code);
+				$this->cause = $ex;
+			}
+				
+			public function getPrevious() {
+				return $this->cause;
+			}
 	}
 }
 ?>
