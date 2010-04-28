@@ -167,8 +167,8 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	}
 		
 	protected function loggingEventToArray(LoggerLoggingEvent $event) {
-        $timestampSec  = round($event->getTimestamp());
-        $timestampUsec = $event->getTimestamp() - $timestampSec;
+		$timestampSec	 = round($event->getTimestamp());
+		$timestampUsec = $event->getTimestamp() - $timestampSec;
         
 		$document = array(
 				'timestamp' => new MongoDate($timestampSec, $timestampUsec),
@@ -184,25 +184,25 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 				$document['className']  = $event->getLocationInformation()->getClassName();
 		}
         
-        if ($event->getThrowableInformation() !== null) {
-            $document['exception'] = $this->exceptionToArray($event->getThrowableInformation()->getThrowable());                    
-        }
+		if ($event->getThrowableInformation() !== null) {
+				$document['exception'] = $this->exceptionToArray($event->getThrowableInformation()->getThrowable());										
+		}
 		
 		return $document;
 	}
     
-    protected function exceptionToArray(Exception $ex) {
-        $document = array(        
-            'message'    => $ex->getMessage(),
-            'code'       => $ex->getCode(),
-            'stackTrace' => $ex->getTraceAsString(),
-        );
-        
-        if (method_exists($ex, 'getPrevious') && $ex->getPrevious() !== null) {
-            $document['innerException'] = $this->exceptionToArray($ex->getPrevious());
-        }
-        
-        return $document;
-    }
+	protected function exceptionToArray(Exception $ex) {
+		$document = array(				
+			'message'		 => $ex->getMessage(),
+			'code'			 => $ex->getCode(),
+			'stackTrace' => $ex->getTraceAsString(),
+		);
+			
+		if (method_exists($ex, 'getPrevious') && $ex->getPrevious() !== null) {
+			$document['innerException'] = $this->exceptionToArray($ex->getPrevious());
+		}
+			
+		return $document;
+	}
 }
 ?>
