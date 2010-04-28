@@ -36,7 +36,8 @@
 
 // Format of log event (for exception):
 // {
-//    "timestamp": {"sec":1272485280,"usec":604269},
+//    "_id": MongoId
+//    "timestamp": MongoDate,
 //    "level":"ERROR",
 //    "thread":"2556",
 //    "message":"testmessage",
