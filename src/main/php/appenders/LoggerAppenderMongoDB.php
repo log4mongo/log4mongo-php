@@ -167,8 +167,11 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	}
 		
 	protected function loggingEventToArray(LoggerLoggingEvent $event) {
+        $timestampSec  = round($event->getTimestamp());
+        $timestampUsec = $event->getTimestamp() - $timestampSec;
+        
 		$document = array(
-				'timestamp' => $event->getTimestamp(),
+				'timestamp' => new MongoDate($timestampSec, $timestampUsec),
 				'level'     => $event->getLevel()->toString(),
 				'thread'    => $event->getThreadName(),
 				'message'   => $event->getMessage()
