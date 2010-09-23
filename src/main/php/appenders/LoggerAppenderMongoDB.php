@@ -59,7 +59,7 @@
 
 class LoggerAppenderMongoDB extends LoggerAppender {
 		
-    protected static $DEFAULT_MONGO_URL_PREFIX = 'mongodb://';
+	protected static $DEFAULT_MONGO_URL_PREFIX = 'mongodb://';
 	protected static $DEFAULT_MONGO_HOST       = 'localhost';
 	protected static $DEFAULT_MONGO_PORT       = 27017;
 	protected static $DEFAULT_DB_NAME          = 'log4php_mongodb';
@@ -86,9 +86,9 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	}
 		
 	public function setHost($hostname) {
-        if (!preg_match('/^mongodb\:\/\//', $hostname)) {
-            $hostname = self::$DEFAULT_MONGO_URL_PREFIX.$hostname;
-        }			
+		if (!preg_match('/^mongodb\:\/\//', $hostname)) {
+			$hostname = self::$DEFAULT_MONGO_URL_PREFIX.$hostname;
+		}			
 		$this->hostname = $hostname;				
 	}
 		
@@ -97,11 +97,11 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	}
 		
 	public function setPort($port) {
-			$this->port = $port;
+		$this->port = $port;
 	}
 		
 	public function getPort() {
-			return $this->port;
+		return $this->port;
 	}
 		
 	public function setDatabaseName($dbName) {
