@@ -30,7 +30,7 @@
  * @author char0n (Vladimir Gorej) <gorej@mortality.sk>	 
  * @package log4php
  * @subpackage appenders
- * @version 1.1
+ * @version 1.2
 */
 
 
@@ -59,6 +59,7 @@
 
 class LoggerAppenderMongoDB extends LoggerAppender {
 		
+    protected static $DEFAULT_MONGO_URL_PREFIX = 'mongodb://';
 	protected static $DEFAULT_MONGO_HOST       = 'localhost';
 	protected static $DEFAULT_MONGO_PORT       = 27017;
 	protected static $DEFAULT_DB_NAME          = 'log4php_mongodb';
@@ -77,14 +78,17 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		
 	public function __construct($name = '') {
 		parent::__construct($name);
-		$this->hostname         = self::$DEFAULT_MONGO_HOST;
+		$this->hostname         = self::$DEFAULT_MONGO_URL_PREFIX.self::$DEFAULT_MONGO_HOST;
 		$this->port             = self::$DEFAULT_MONGO_PORT;
 		$this->dbName           = self::$DEFAULT_DB_NAME;
 		$this->collectionName   = self::$DEFAULT_COLLECTION_NAME;		
 		$this->requiresLayout   = false;
 	}
 		
-	public function setHost($hostname) {			
+	public function setHost($hostname) {
+        if (!preg_match('/^mongodb\:\/\//', $hostname)) {
+            $hostname = self::$DEFAULT_MONGO_URL_PREFIX.$hostname;
+        }			
 		$this->hostname = $hostname;				
 	}
 		

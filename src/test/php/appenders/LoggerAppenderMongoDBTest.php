@@ -31,14 +31,7 @@
  * @author char0n (Vladimir Gorej) <gorej@mortality.sk>	 
  * @package log4php
  * @subpackage appenders
- * @version 1.1
-*/
-
-/*
-require_once realpath(dirname(__FILE__).'../../../../../lib/log4php/LoggerAppender.php');
-require_once realpath(dirname(__FILE__).'../../../../../lib/log4php/LoggerLoggingEvent.php');
-require_once realpath(dirname(__FILE__).'../../../../../lib/log4php/Logger.php');
-require_once realpath(dirname(__FILE__).'../../../../main/php/appenders/LoggerAppenderMongoDB.php');
+ * @version 1.2
 */
 
 class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
@@ -66,16 +59,16 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($appender instanceof LoggerAppenderMongoDB);
 	}
 	
-	public function testSetHost() {
-		$expected = 'localhost';
+	public function testSetGetHost() {
+		$expected = 'mongodb://localhost';
 		self::$appender->setHost($expected);		
 		$result = self::$appender->getHost();
 		$this->assertEquals($expected, $result, 'Host doesn\'t match expted value');
 	}
 	
-	public function testGetHost() {
-		$expected = 'localhost';
-		self::$appender->setHost($expected);		
+	public function testSetGetHostMongoPrefix() {
+		$expected = 'mongodb://localhost';
+		self::$appender->setHost('localhost');		
 		$result = self::$appender->getHost();
 		$this->assertEquals($expected, $result, 'Host doesn\'t match expted value');
 	}
@@ -175,7 +168,7 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 	public function testMongoDB1() {		
 		$mongo  = self::$mongoConnection;
 		$db     = $mongo->selectDB('log4php_mongodb');
-		$db->dropCollection('logs');		
+		$db->drop('logs');		
 		$collection = $db->selectCollection('logs');
 				
 		self::$appender->append(self::$event);		
@@ -186,7 +179,7 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 	public function testMongoDBException() {				
 		$mongo	= self::$mongoConnection;
 		$db			= $mongo->selectDB('log4php_mongodb');
-		$db->dropCollection('logs');				
+		$db->drop('logs');				
 		$collection = $db->selectCollection('logs');
 			
 		$throwable = new TestingException('exception1');
@@ -199,7 +192,7 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 	public function testMongoDBInnerException() {		
 		$mongo	= self::$mongoConnection;
 		$db			= $mongo->selectDB('log4php_mongodb');
-		$db->dropCollection('logs');				
+		$db->drop('logs');				
 		$collection = $db->selectCollection('logs');
 				
 		$throwable1 = new TestingException('exception1');

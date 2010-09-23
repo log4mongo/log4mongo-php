@@ -40,7 +40,7 @@ spl_autoload_register(array('Logger', 'autoload'));
  * @category   log4php
  * @package log4php
  * @license	   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
- * @version	   SVN: $Id: Logger.php 937159 2010-04-23 05:20:19Z grobmeier $
+ * @version	   SVN: $Id: Logger.php 955838 2010-06-18 04:55:34Z grobmeier $
  * @link	   http://logging.apache.org/log4php
  */
  /*
@@ -282,10 +282,7 @@ class Logger {
 	 * @see LoggerLoggingEvent			
 	 */
 	public function forcedLog($fqcn, $caller, $level, $message) {
-		$throwable = null;
-		if ($caller !== null && $caller instanceof Exception) {
-			$throwable = $caller;							 
-		}
+		$throwable = ($caller !== null && $caller instanceof Exception) ? $caller : null;
 		
 		$this->callAppenders(new LoggerLoggingEvent($fqcn, $this, $level, $message, null, $throwable));
 	} 
