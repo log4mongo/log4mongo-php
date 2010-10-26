@@ -1,7 +1,7 @@
-log4php-MongoDB
+log4mongo-php
 ===============
-log4php-MongoDB is log4php appender to MongoDB database.
-log4php-MongoDB is using mongodb-php driver - http://www.php.net/manual/en/book.mongo.php
+log4mongo-php is log4php appender to MongoDB database.
+log4mongo-php is using mongodb-php driver - http://www.php.net/manual/en/book.mongo.php
 
 Requirements
 ============
