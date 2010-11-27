@@ -41,6 +41,7 @@
 //    "level":"ERROR",
 //    "thread":"2556",
 //    "message":"testmessage",
+//    "loggerName":"testLogger",
 //    "fileName":"NA",
 //    "method":"getLocationInformation",
 //    "lineNumber":"NA",
@@ -198,10 +199,11 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		$timestampUsec = (int) (($event->getTimestamp() - $timestampSec) * 1000000);
         
 		$document = array(
-			'timestamp' => new MongoDate($timestampSec, $timestampUsec),
-			'level'     => $event->getLevel()->toString(),
-			'thread'    => $event->getThreadName(),
-			'message'   => $event->getMessage()
+			'timestamp'  => new MongoDate($timestampSec, $timestampUsec),
+			'level'      => $event->getLevel()->toString(),
+			'thread'     => $event->getThreadName(),
+			'message'    => $event->getMessage(),
+			'loggerName' => $event->getLoggerName() 
 		);
 		
 		if ($event->getLocationInformation() !== null) {
