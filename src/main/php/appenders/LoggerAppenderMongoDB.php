@@ -73,6 +73,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	
 	protected $connection;
 	protected $collection;
+	protected $bsonifier;
 		
 	protected $userName;
 	protected $password;
@@ -84,6 +85,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		$this->dbName           = self::$DEFAULT_DB_NAME;
 		$this->collectionName   = self::$DEFAULT_COLLECTION_NAME;		
 		$this->requiresLayout   = false;
+		$this->bsonifier        = new LoggerLoggingEventBsonifier();		
 	}
 		
 	public function setHost($hostname) {
@@ -170,8 +172,13 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	 * @throws LoggerException	If the pattern conversion or the INSERT statement fails.
 	 */
 	public function append(LoggerLoggingEvent $event) {		 
-		if ($this->collection != null) {
-			$document = $this->loggingEventToArray($event);
+		if ($this->canAppend == true && $this->collection != null) {
+			if ($this->layout != null) {
+				$document = (array) $this->layout->format($event);
+			} else {
+				$document = (array) $this->bsonifier->bsonify($event);
+			}
+			
 			$this->collection->insert($document);
 		}				 
 	}
@@ -192,46 +199,6 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		
 	public function __destruct() {
 		$this->close();
-	}
-		
-	protected function loggingEventToArray(LoggerLoggingEvent $event) {
-		$timestampSec  = (int) $event->getTimestamp();
-		$timestampUsec = (int) (($event->getTimestamp() - $timestampSec) * 1000000);
-        
-		$document = array(
-			'timestamp'  => new MongoDate($timestampSec, $timestampUsec),
-			'level'      => $event->getLevel()->toString(),
-			'thread'     => $event->getThreadName(),
-			'message'    => $event->getMessage(),
-			'loggerName' => $event->getLoggerName() 
-		);
-		
-		if ($event->getLocationInformation() !== null) {
-			$document['fileName']   = $event->getLocationInformation()->getFileName();
-			$document['method']     = $event->getLocationInformation()->getMethodName();
-			$document['lineNumber'] = $event->getLocationInformation()->getLineNumber();
-			$document['className']  = $event->getLocationInformation()->getClassName();
-		}
-        
-		if ($event->getThrowableInformation() !== null) {
-			$document['exception'] = $this->exceptionToArray($event->getThrowableInformation()->getThrowable());										
-		}
-        
-		return $document;
-	}
-    
-	protected function exceptionToArray(Exception $ex) {
-		$document = array(				
-			'message'    => $ex->getMessage(),
-			'code'       => $ex->getCode(),
-			'stackTrace' => $ex->getTraceAsString(),
-		);
-                        
-		if (method_exists($ex, 'getPrevious') && $ex->getPrevious() !== null) {
-			$document['innerException'] = $this->exceptionToArray($ex->getPrevious());
-		}
-			
-		return $document;
-	}
+	}		
 }
 ?>
