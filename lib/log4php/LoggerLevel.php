@@ -27,7 +27,7 @@
  * <p>The <i>LoggerLevel</i> class may be subclassed to define a larger
  * level set.</p>
  *
- * @version $Revision: 912120 $
+ * @version $Revision: 998420 $
  * @package log4php
  * @since 0.5
  */
@@ -213,12 +213,19 @@ class LoggerLevel {
 	}
 
 	/**
-	 * Returns the string representation of this priority.
+	 * Returns the string representation of this level.
 	 * @return string
-	 * @final
 	 */
 	public function toString() {
 		return $this->levelStr;
+	}
+	
+	/**
+	 * Returns the string representation of this level.
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->toString();
 	}
 
 	/**

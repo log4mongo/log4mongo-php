@@ -44,7 +44,7 @@
  * to the provision node. Other descendants of the same ancestor add
  * themselves to the previously created provision node.</p>
  *
- * @version $Revision: 822448 $
+ * @version $Revision: 998428 $
  * @package log4php
  */
  /*
@@ -205,6 +205,7 @@ class LoggerHierarchy {
 			$loggers[$i]->removeAllAppenders();
 		}
 		$this->rendererMap->clear();
+		LoggerAppenderPool::clear();
 	}
 	
 	/**

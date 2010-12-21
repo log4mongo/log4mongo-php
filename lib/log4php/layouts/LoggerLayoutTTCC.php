@@ -44,7 +44,7 @@
  * The above would print:<br>
  * <samp>02:28 [13714] INFO root - Hello World!</samp>
  *
- * @version $Revision: 883108 $
+ * @version $Revision: 998420 $
  * @package log4php
  * @subpackage layouts
  */
@@ -190,7 +190,7 @@ class LoggerLayoutTTCC extends LoggerLayout {
         }
         
         $level = $event->getLevel();
-        $format .= $level->toString().' ';
+        $format .= $level.' ';
         
         if($this->categoryPrefixing) {
             $format .= $event->getLoggerName().' ';

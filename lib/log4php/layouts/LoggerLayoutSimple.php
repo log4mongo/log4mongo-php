@@ -34,7 +34,7 @@
  * 
  * <samp>INFO - Hello World!</samp>
  *
- * @version $Revision: 883108 $
+ * @version $Revision: 998420 $
  * @package log4php
  * @subpackage layouts
  */  
@@ -56,6 +56,7 @@ class LoggerLayoutSimple extends LoggerLayout {
      */
     public function format(LoggerLoggingEvent $event) {
         $level = $event->getLevel();
-        return $level->toString() . ' - ' . $event->getRenderedMessage(). PHP_EOL;
+        $message = $event->getRenderedMessage();
+        return "$level - $message" . PHP_EOL;
     }
 }

@@ -21,7 +21,7 @@
 /**
  * The internal representation of logging event.
  *
- * @version $Revision: 955838 $
+ * @version $Revision: 998456 $
  * @package log4php
  */
 class LoggerLoggingEvent {
@@ -259,7 +259,7 @@ class LoggerLoggingEvent {
 	public function getNDC() {
 		if($this->ndcLookupRequired) {
 			$this->ndcLookupRequired = false;
-			$this->ndc = implode(' ', LoggerNDC::get());
+			$this->ndc = LoggerNDC::get();
 		}
 		return $this->ndc;
 	}
