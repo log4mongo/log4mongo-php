@@ -31,7 +31,7 @@
  * @author char0n (Vladimir Gorej) <gorej@mortality.sk>	 
  * @package log4php
  * @subpackage appenders
- * @version 1.2
+ * @version 1.5b1
 */
 
 class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {

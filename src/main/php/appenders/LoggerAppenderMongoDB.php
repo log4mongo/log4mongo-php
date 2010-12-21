@@ -30,7 +30,7 @@
  * @author char0n (Vladimir Gorej) <gorej@mortality.sk>	 
  * @package log4php
  * @subpackage appenders
- * @version 1.2
+ * @version 1.5rcb1
 */
 
 
