@@ -36,19 +36,15 @@
 
 class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 		
-	protected static $mongoConnection;
 	protected static $appender;
 	protected static $event;
 	
 	public static function setUpBeforeClass() {
-		self::$mongoConnection  = new Mongo(sprintf('%s:%d', 'localhost', 27017));
 		self::$appender         = new LoggerAppenderMongoDB('mongo_appender');
 		self::$event            = new LoggerLoggingEvent("LoggerAppenderMongoDBTest", new Logger("TEST"), LoggerLevel::getLevelError(), "testmessage");
 	}
 	
 	public static function tearDownAfterClass() {
-		self::$mongoConnection->close();
-		self::$mongoConnection = null;
 		self::$appender->close();
 		self::$appender = null;
 		self::$event = null;
@@ -146,12 +142,12 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 	/**
 	* @expectedException LoggerException 
 	*/
-	public function testActivateOptions1() {
+	public function testActivateOptions() {
 		self::$appender->activateOptions();		
 		$this->fail('Appender options should not activate');
 	}						
 	
-	public function testActivateOptions2() {
+	public function testActivateOptionsNoCredentials() {
 		try {
 			self::$appender->setUserName(null);
 			self::$appender->setPassword(null);
@@ -161,23 +157,23 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 		}		
 	}		
 	
-    public function testAppend1() {
+    public function testAppend() {
 		self::$appender->append(self::$event);
 	}
     
-	public function testMongoDB1() {		
-		$mongo  = self::$mongoConnection;
+	public function testMongoDB() {		
+		$mongo  = self::$appender->getConnection();
 		$db     = $mongo->selectDB('log4php_mongodb');
 		$db->drop('logs');		
 		$collection = $db->selectCollection('logs');
 				
-		self::$appender->append(self::$event);		
-	
-		$this->assertNotEquals($collection->findOne(), null, 'Collection should return one record');
+		self::$appender->append(self::$event);
+
+		$this->assertNotEquals(null, $collection->findOne(), 'Collection should return one record');
 	}     
-        
+
 	public function testMongoDBException() {				
-		$mongo	= self::$mongoConnection;
+		$mongo	= self::$appender->getConnection();
 		$db			= $mongo->selectDB('log4php_mongodb');
 		$db->drop('logs');				
 		$collection = $db->selectCollection('logs');
@@ -190,7 +186,7 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 	}		
 		
 	public function testMongoDBInnerException() {		
-		$mongo	= self::$mongoConnection;
+		$mongo	= self::$appender->getConnection();
 		$db			= $mongo->selectDB('log4php_mongodb');
 		$db->drop('logs');				
 		$collection = $db->selectCollection('logs');

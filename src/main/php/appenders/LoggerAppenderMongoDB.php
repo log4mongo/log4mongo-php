@@ -77,6 +77,8 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		
 	protected $userName;
 	protected $password;
+	
+	protected $canAppend = false;
 		
 	public function __construct($name = '') {
 		parent::__construct($name);
@@ -85,7 +87,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 		$this->dbName           = self::$DEFAULT_DB_NAME;
 		$this->collectionName   = self::$DEFAULT_COLLECTION_NAME;		
 		$this->requiresLayout   = false;
-		$this->bsonifier        = new LoggerLoggingEventBsonifier();		
+		$this->bsonifier        = new LoggerLoggingEventBsonifier();
 	}
 		
 	public function setHost($hostname) {
@@ -138,6 +140,14 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	public function getPassword() {
 		return $this->password;
 	}
+	
+	public function getConnection() {
+		return $this->connection;
+	}
+	
+	public function getCollection() {
+		return $this->collection;
+	}
 		
 	/**
 	 * Setup db connection.
@@ -156,6 +166,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 					throw new Exception($authResult['errmsg'], $authResult['ok']);
 				}
 			}
+			
 			$this->collection = $db->selectCollection($this->collectionName);												 
 		} catch (Exception $ex) {
 			$this->canAppend = false;
@@ -171,15 +182,10 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	 * 
 	 * @throws LoggerException	If the pattern conversion or the INSERT statement fails.
 	 */
-	public function append(LoggerLoggingEvent $event) {		 
+	public function append(LoggerLoggingEvent $event) {
 		if ($this->canAppend == true && $this->collection != null) {
-			if ($this->layout != null) {
-				$document = (array) $this->layout->format($event);
-			} else {
-				$document = (array) $this->bsonifier->bsonify($event);
-			}
-			
-			$this->collection->insert($document);
+			$document = (array) $this->bsonifier->bsonify($event);
+			$this->collection->insert($document);			
 		}				 
 	}
 		
