@@ -44,11 +44,11 @@ class LoggerLoggingEventBsonifier {
 	public function bsonify(LoggerLoggingEvent $event) {
 		$timestampSec  = (int) $event->getTimestamp();
 		$timestampUsec = (int) (($event->getTimestamp() - $timestampSec) * 1000000);
-        
+
 		$document = new ArrayObject(array(
 			'timestamp'  => new MongoDate($timestampSec, $timestampUsec),
 			'level'      => $event->getLevel()->toString(),
-			'thread'     => $event->getThreadName(),
+			'thread'     => (int) $event->getThreadName(),
 			'message'    => $event->getMessage(),
 			'loggerName' => $event->getLoggerName() 
 		));	
@@ -69,7 +69,7 @@ class LoggerLoggingEventBsonifier {
 		if ($locationInfo != null) {
 			$document['fileName']   = $locationInfo->getFileName();
 			$document['method']     = $locationInfo->getMethodName();
-			$document['lineNumber'] = $locationInfo->getLineNumber();
+			$document['lineNumber'] = ($locationInfo->getLineNumber() == 'NA') ? 'NA' : (int) $locationInfo->getLineNumber();
 			$document['className']  = $locationInfo->getClassName();
 		}		
 	}

@@ -112,5 +112,40 @@ class LoggerLoggingEventBsonifierTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('test exception inner', $bsonifiedEvent['exception']['innerException']['message']);
 		$this->assertContains('[internal function]: LoggerLoggingEventBsonifierTest', $bsonifiedEvent['exception']['stackTrace']);		
 	}
+
+	public function testIsThreadInteger() {
+                $event = new LoggerLoggingEvent(
+                        'testFqcn',
+                        self::$logger,
+                        LoggerLevel::getLevelWarn(),
+                        'test message'
+                );
+                $bsonifiedEvent = self::$bsonifier->bsonify($event);
+		$this->assertTrue(is_int($bsonifiedEvent['thread']));
+	}
+
+        public function testIsLocationInfoLineNumberIntegerOrNA() {
+                $event = new LoggerLoggingEvent(
+                        'testFqcn',
+                        self::$logger,
+                        LoggerLevel::getLevelWarn(),
+                        'test message'
+                );
+                $bsonifiedEvent = self::$bsonifier->bsonify($event);
+                $this->assertTrue(is_int($bsonifiedEvent['lineNumber']) || $bsonifiedEvent['lineNumber'] == 'NA');
+        }
+
+        public function testIsThrowableInfoExceptionCodeInteger() {
+                $event = new LoggerLoggingEvent(
+                        'testFqcn',
+                        self::$logger,
+                        LoggerLevel::getLevelWarn(),
+                        'test message',
+                        microtime(true),
+                        new TestingException('test exeption', 1, new Exception('test exception inner', 2))
+                );
+                $bsonifiedEvent = self::$bsonifier->bsonify($event);
+                $this->assertTrue(is_int($bsonifiedEvent['exception']['code']));
+        }
 } 
 ?>
