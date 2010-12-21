@@ -207,23 +207,4 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 		self::$appender->close();
 	}
 }
-
-if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-	class TestingException extends Exception {}
-} else {
-	class TestingException extends Exception {
-				
-		protected $cause;
-				
-		public function __construct($message = '', $code = 0, Exception $ex = null) {
-			
-			parent::__construct($message, $code);
-				$this->cause = $ex;
-			}
-				
-			public function getPrevious() {
-				return $this->cause;
-			}
-	}
-}
 ?>

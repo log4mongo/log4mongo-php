@@ -17,7 +17,7 @@
  */
 class LoggerMongoDbBsonLayout extends LoggerLayout {
 	
-	protected $bsonifier
+	protected $bsonifier;
 	
 	public function activateOptions() {
 		$this->bsonifier = new LoggerLoggingEventBsonifier();

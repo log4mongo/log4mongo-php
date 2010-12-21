@@ -15,14 +15,16 @@ class LoggerLoggingEventBsonifier {
 
 		$this->addLocationInformation($document, $event->getLocationInformation());
 		$this->addThrowableInformation($document, $event->getThrowableInformation());
+		
+		return $document;
 	}
 	
 	protected function addLocationInformation(ArrayObject $document, LoggerLocationInfo $locationInfo = null) {
 		if ($locationInfo != null) {
 			$document['fileName']   = $locationInfo->getFileName();
 			$document['method']     = $locationInfo->getMethodName();
-			$document['lineNumber'] = $$locationInfo->getLineNumber();
-			$document['className']  = $$locationInfo->getClassName();
+			$document['lineNumber'] = $locationInfo->getLineNumber();
+			$document['className']  = $locationInfo->getClassName();
 		}		
 	}
 	
