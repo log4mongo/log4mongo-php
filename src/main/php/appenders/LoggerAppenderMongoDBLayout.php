@@ -17,7 +17,8 @@ class LoggerAppenderMongoDBLayout extends LoggerAppenderMongoDB {
 	 */
 	public function append(LoggerLoggingEvent $event) {
 		if ($this->canAppend == true && $this->collection != null) {
-			$document = (array) $this->getLayout()->format($event);
+			$document = json_decode($this->getLayout()->format($event), true);
+			$document['timestamp'] = new MongoDate($document['timestamp']['sec'], $document['timestamp']['usec']);
 			$this->collection->insert($document);
 		}				 
 	}	

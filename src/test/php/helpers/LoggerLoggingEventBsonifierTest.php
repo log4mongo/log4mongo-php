@@ -49,6 +49,14 @@ class LoggerLoggingEventBsonifierTest extends PHPUnit_Framework_TestCase {
 		self::$bsonifier = null;
 	}
 	
+	protected function setUp() {
+		if (extension_loaded('mongo') == false) {
+			$this->markTestSkipped(
+				'The Mongo extension is not available.'
+			);
+		}
+	}	
+	
 	public function testBsonifySimple() {
 		$event = new LoggerLoggingEvent(
 			'testFqcn',

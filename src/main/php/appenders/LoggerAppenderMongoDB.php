@@ -184,7 +184,7 @@ class LoggerAppenderMongoDB extends LoggerAppender {
 	 */
 	public function append(LoggerLoggingEvent $event) {
 		if ($this->canAppend == true && $this->collection != null) {
-			$document = (array) $this->bsonifier->bsonify($event);
+			$document = $this->bsonifier->bsonify($event);
 			$this->collection->insert($document);			
 		}				 
 	}

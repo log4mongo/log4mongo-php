@@ -34,20 +34,28 @@
  * @version 1.5b1
 */
 
-class LoggerMongoDbBsonLayoutTest extends PHPUnit_Framework_TestCase {
+class LoggerLayoutBsonTest extends PHPUnit_Framework_TestCase {
 	
 	protected static $logger;
 	protected static $layout;
 	
 	public static function setUpBeforeClass() {
 		self::$logger    = Logger::getLogger('test.Logger');
-		self::$layout    = new LoggerMongoDbBsonLayout();
+		self::$layout    = new LoggerLayoutBson();
 	}	
 	
 	public static function tearDownAfterClass() {
 		self::$logger  = null;
 		self::$layout  = null;
 	}
+	
+	protected function setUp() {
+		if (extension_loaded('mongo') == false) {
+			$this->markTestSkipped(
+				'The Mongo extension is not available.'
+			);
+		}
+	}	
 	
 	public function testActivateOptions() {
 		$result = self::$layout->activateOptions();
@@ -66,7 +74,7 @@ class LoggerMongoDbBsonLayoutTest extends PHPUnit_Framework_TestCase {
 			LoggerLevel::getLevelWarn(),
 			'test message'
 		);
-		$bsonifiedEvent = self::$layout->format($event);
+		$bsonifiedEvent = json_decode(self::$layout->format($event), true);
 		
 		$this->assertEquals('WARN', $bsonifiedEvent['level']);
 		$this->assertEquals('test message', $bsonifiedEvent['message']);
@@ -80,7 +88,7 @@ class LoggerMongoDbBsonLayoutTest extends PHPUnit_Framework_TestCase {
 			LoggerLevel::getLevelWarn(),
 			'test message'
 		);
-		$bsonifiedEvent = self::$layout->format($event);
+		$bsonifiedEvent = json_decode(self::$layout->format($event), true);
 		
 		$this->assertEquals('NA', $bsonifiedEvent['fileName']);		
 		$this->assertEquals('getLocationInformation', $bsonifiedEvent['method']);
@@ -97,12 +105,12 @@ class LoggerMongoDbBsonLayoutTest extends PHPUnit_Framework_TestCase {
 			microtime(true),
 			new Exception('test exception', 1)
 		);
-		$bsonifiedEvent = self::$layout->format($event);
-		
+		$bsonifiedEvent = json_decode(self::$layout->format($event), true);
+	
 		$this->assertTrue(array_key_exists('exception', $bsonifiedEvent));
 		$this->assertEquals(1, $bsonifiedEvent['exception']['code']);
 		$this->assertEquals('test exception', $bsonifiedEvent['exception']['message']);
-		$this->assertContains('[internal function]: LoggerMongoDbBsonLayoutTest', $bsonifiedEvent['exception']['stackTrace']);
+		$this->assertContains('[internal function]: LoggerLayoutBsonTest', $bsonifiedEvent['exception']['stackTrace']);
 	}
 	
 	public function testFormatThrowableInfoWithInnerException() {
@@ -114,13 +122,13 @@ class LoggerMongoDbBsonLayoutTest extends PHPUnit_Framework_TestCase {
 			microtime(true),
 			new TestingException('test exeption', 1, new Exception('test exception inner', 2))
 		);
-		$bsonifiedEvent = self::$layout->format($event);
+		$bsonifiedEvent = json_decode(self::$layout->format($event), true);
 
 		$this->assertTrue(array_key_exists('exception', $bsonifiedEvent));
 		$this->assertTrue(array_key_exists('innerException', $bsonifiedEvent['exception']));
 		$this->assertEquals(2, $bsonifiedEvent['exception']['innerException']['code']);
 		$this->assertEquals('test exception inner', $bsonifiedEvent['exception']['innerException']['message']);
-		$this->assertContains('[internal function]: LoggerMongoDbBsonLayoutTest', $bsonifiedEvent['exception']['stackTrace']);		
+		$this->assertContains('[internal function]: LoggerLayoutBsonTest', $bsonifiedEvent['exception']['stackTrace']);		
 	}	
 }
 ?>

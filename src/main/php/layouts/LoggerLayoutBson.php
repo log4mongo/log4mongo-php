@@ -49,7 +49,7 @@
  *     }
  * }
  */
-class LoggerMongoDBBsonLayout extends LoggerLayout {
+class LoggerLayoutBson extends LoggerLayout {
 	
 	/*
 	 * Bsonifier instance
@@ -64,7 +64,7 @@ class LoggerMongoDBBsonLayout extends LoggerLayout {
 	
 	public function format(LoggerLoggingEvent $event) {
 		$document = $this->bsonifier->bsonify($event);
-		return $document;
+		return json_encode($document);
 	} 	
 	
 	public function getContentType() {

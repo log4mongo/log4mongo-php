@@ -42,7 +42,7 @@ class LoggerAppenderMongoDBLayoutTest extends PHPUnit_Framework_TestCase {
 	
 	public static function setUpBeforeClass() {
 		self::$appender         = new LoggerAppenderMongoDBLayout('mongo_appender');
-		self::$layout           = new LoggerMongoDbBsonLayout();
+		self::$layout           = new LoggerLayoutBson();
 		self::$appender->setLayout(self::$layout);
 		self::$event            = new LoggerLoggingEvent("LoggerAppenderMongoDBLayoutTest", new Logger("TEST"), LoggerLevel::getLevelError(), "testmessage");
 	}
@@ -53,6 +53,15 @@ class LoggerAppenderMongoDBLayoutTest extends PHPUnit_Framework_TestCase {
 		self::$layout = null;
 		self::$event = null;
 	}	
+	
+	protected function setUp() {
+		if (extension_loaded('mongo') == false) {
+			$this->markTestSkipped(
+				'The Mongo extension is not available.'
+			);
+		}
+	}
+	
 	
 	public function testMongoDB() {		
 		self::$appender->activateOptions();

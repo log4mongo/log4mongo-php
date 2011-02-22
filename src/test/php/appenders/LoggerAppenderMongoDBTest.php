@@ -50,6 +50,14 @@ class LoggerAppenderMongoDBTest extends PHPUnit_Framework_TestCase {
 		self::$event = null;
 	}
 	
+	protected function setUp() {
+		if (extension_loaded('mongo') == false) {
+			$this->markTestSkipped(
+				'The Mongo extension is not available.'
+			);
+		}
+	}	
+	
 	public function test__construct() {
 		$appender = new LoggerAppenderMongoDB('mongo_appender');
 		$this->assertTrue($appender instanceof LoggerAppenderMongoDB);
