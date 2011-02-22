@@ -45,7 +45,7 @@
  *         $document       = parent::format($event);
  *         $document['ip'] = $event->getMDC('ip');
  *         
- *         return $document;
+ *         return json_encode($document);
  *     }
  * }
  */
